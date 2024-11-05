@@ -42,7 +42,7 @@
     <h2>Teca (Tectona grandis)</h2>
     <img src="SUBSTITUA_PELO_LINK_DA_IMAGEM_DA_TECA" alt="Teca">
     <p>
-        Reconhecendo a importância da teca pela sua madeira durável, Frei Leandro desempenhou um papel na introdução de árvores de teca no Brasil. Ele as plantou no jardim botânico para estudar seu crescimento e potencial uso no país.
+        Reconhecendo a importância da teca pela sua madeira durável, Frei Leandro desempenhou um papel na introdução de árvores de teca no Brasil. Ele as plantou no Jardim Botânico para estudar seu crescimento e potencial uso no país.
     </p>
 </div>
 
@@ -50,7 +50,7 @@
     <h2>Fruta-pão (Artocarpus altilis)</h2>
     <img src="SUBSTITUA_PELO_LINK_DA_IMAGEM_DA_FRUTA_PAO" alt="Fruta-pão">
     <p>
-        Compreendendo o potencial da fruta-pão como fonte alimentar, Frei Leandro cultivou árvores de fruta-pão no jardim botânico. Seu trabalho contribuiu para a disseminação do cultivo da fruta-pão no Brasil, visando fornecer uma alternativa alimentar básica.
+        Compreendendo o potencial da fruta-pão como fonte alimentar, Frei Leandro cultivou árvores de fruta-pão no Jardim Botânico. Seu trabalho contribuiu para a disseminação do cultivo da fruta-pão no Brasil, visando fornecer uma alternativa alimentar básica.
     </p>
 </div>
 
@@ -66,7 +66,7 @@
     <h2>Biribá (Rollinia mucosa)</h2>
     <img src="SUBSTITUA_PELO_LINK_DA_IMAGEM_DO_BIRIBA" alt="Biribá">
     <p>
-        Frei Leandro cultivou árvores de biribá no jardim botânico, apreciando seu fruto comestível. Seus esforços ajudaram a promover o cultivo do biribá e a estudar seu potencial agrícola no Brasil.
+        Frei Leandro cultivou árvores de biribá no Jardim Botânico, apreciando seu fruto comestível. Seus esforços ajudaram a promover o cultivo do biribá e a estudar seu potencial agrícola no Brasil.
     </p>
 </div>
 
@@ -74,7 +74,7 @@
     <h2>Sibipiruna (Caesalpinia peltophoroides)</h2>
     <img src="SUBSTITUA_PELO_LINK_DA_IMAGEM_DA_SIBIPIRUNA" alt="Sibipiruna">
     <p>
-        A sibipiruna, uma árvore nativa brasileira com belas flores amarelas, foi uma das espécies com as quais Frei Leandro trabalhou. Ele a plantou no jardim botânico para estudar seu crescimento e promover seu uso ornamental na arborização urbana.
+        A sibipiruna, uma árvore nativa brasileira com belas flores amarelas, foi uma das espécies com as quais Frei Leandro trabalhou. Ele a plantou no Jardim Botânico para estudar seu crescimento e promover seu uso ornamental na arborização urbana.
     </p>
 </div>
 
@@ -106,7 +106,7 @@
     <h2>Jaqueira (Artocarpus heterophyllus)</h2>
     <img src="SUBSTITUA_PELO_LINK_DA_IMAGEM_DA_JAQUEIRA" alt="Jaqueira">
     <p>
-        Frei Leandro introduziu jaqueiras no jardim botânico, reconhecendo seu valor como fonte alimentar. Ele estudou sua adaptação ao clima brasileiro e promoveu seu cultivo.
+        Frei Leandro introduziu jaqueiras no Jardim Botânico, reconhecendo seu valor como fonte alimentar. Ele estudou sua adaptação ao clima brasileiro e promoveu seu cultivo.
     </p>
 </div>
 
@@ -124,13 +124,22 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
+    // URL do arquivo GPX (link raw do GitHub)
+    var gpxUrl = 'https://raw.githubusercontent.com/joaopdahmer/JBRJ_FREI_LEANDRO/main/trilha_frei_leandro.gpx';
+
     // Carrega o arquivo GPX da trilha
-    new L.GPX('CAMINHO_PARA_SEU_ARQUIVO_GPX.gpx', {
+    new L.GPX(gpxUrl, {
         async: true,
         marker_options: {
             startIconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/pin-icon-start.png',
             endIconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/pin-icon-end.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/pin-shadow.png'
+        },
+        polyline_options: {
+            color: 'blue',
+            opacity: 0.75,
+            weight: 5,
+            lineCap: 'round'
         }
     }).on('loaded', function(e) {
         map.fitBounds(e.target.getBounds());
