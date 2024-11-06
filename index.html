@@ -133,6 +133,7 @@
 
     // Variáveis globais para referência aos marcadores das plantas
     var plantMarkers = {};
+    var currentPlantId = null; // Para rastrear qual planta está em foco
 
     // Adiciona os pontos das plantas ao mapa
     L.geoJSON(plantasGeoJSON, {
@@ -180,6 +181,13 @@
         }
     }
 
+    // Função para resetar o mapa ao estado padrão
+    function resetMap() {
+        map.setView([-22.9680, -43.2240], 15, { animate: true, duration: 1 });
+        // Fecha todos os popups
+        map.closePopup();
+    }
+
     // Observa a rolagem das narrativas
     var options = {
         root: document.querySelector('.narratives'),
@@ -189,9 +197,17 @@
 
     var observer = new IntersectionObserver(function(entries, observer) {
         entries.forEach(function(entry) {
+            var plantId = entry.target.id.split('-')[1];
             if (entry.isIntersecting) {
-                var plantId = entry.target.id.split('-')[1];
+                // Quando a narrativa entra em foco
+                currentPlantId = plantId;
                 focusOnPlant(plantId);
+            } else {
+                // Quando a narrativa sai de foco
+                if (currentPlantId === plantId) {
+                    resetMap();
+                    currentPlantId = null;
+                }
             }
         });
     }, options);
