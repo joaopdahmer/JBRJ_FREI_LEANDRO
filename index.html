@@ -142,7 +142,7 @@
         map.fitBounds(e.target.getBounds());
     }).addTo(map);
 
-    // Dados GeoJSON das plantas (conforme fornecido)
+    // Dados GeoJSON das plantas
     var plantasGeoJSON = {
         "type": "FeatureCollection",
         "name": "plantas_frei_leandro",
@@ -166,7 +166,7 @@
         pointToLayer: function(feature, latlng) {
             // Define o ícone personalizado para as plantas
             var plantIcon = L.icon({
-                iconUrl: 'https://cloud.jbrj.gov.br/core/preview?fileId=17944130&x=1920&y=921&a=true&etag=8baaf56e22ff20721c74c68b82a9eb73',
+                iconUrl: 'https://cloud.jbrj.gov.br/apps/files_sharing/publicpreview/PwkmGYHBiPLXqkQ?file=/&fileId=17944130&x=1446&y=760&a=true&etag=8baaf56e22ff20721c74c68b82a9eb73',
                 iconSize: [32, 37],
                 iconAnchor: [16, 37],
                 popupAnchor: [0, -28]
