@@ -150,12 +150,14 @@
 <script>
     // Inicializa o mapa
     var map = L.map('map', {
-        zoomControl: false // Remove os controles de zoom padrão
+        zoomControl: false, // Remove os controles de zoom padrão
+        maxZoom: 19 // Define o nível máximo de zoom
     }).setView([-22.9680, -43.2230], 17); // Zoom no arboreto
 
-    // Adiciona a camada de tiles do OpenStreetMap
+    // Adiciona a camada de tiles do OpenStreetMap com maxZoom definido
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
     }).addTo(map);
 
     // Carrega o arquivo GPX da trilha
@@ -254,7 +256,7 @@
     function focusOnPlant(plantId) {
         var marker = plantMarkers[plantId];
         if (marker) {
-            map.flyTo(marker.getLatLng(), 20, { animate: true, duration: 1.5 }); // Zoom nível 20
+            map.flyTo(marker.getLatLng(), 19, { animate: true, duration: 1.5 }); // Zoom nível 19 (máximo)
             marker.openPopup();
         }
     }
