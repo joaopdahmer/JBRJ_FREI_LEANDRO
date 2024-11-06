@@ -94,7 +94,7 @@
     // Inicializa o mapa
     var map = L.map('map', {
         zoomControl: false // Remove os controles de zoom padrão
-    }).setView([-22.9680, -43.2240], 15); // Centraliza o mapa na área aproximada da trilha
+    }).setView([-22.9680, -43.2230], 17); // Centraliza o mapa no arboreto com zoom maior
 
     // Adiciona a camada de tiles do OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -116,7 +116,7 @@
             lineCap: 'round'
         }
     }).on('loaded', function(e) {
-        map.fitBounds(e.target.getBounds());
+        // Não ajustamos mais o fitBounds aqui para manter o zoom no arboreto
     }).addTo(map);
 
     // Dados GeoJSON das plantas (apenas Chá, Teca e Jaqueira)
@@ -172,18 +172,18 @@
         }
     }).addTo(map);
 
-    // Função para centralizar e dar zoom no marcador correspondente
+    // Função para centralizar e dar zoom no marcador correspondente usando flyTo
     function focusOnPlant(plantId) {
         var marker = plantMarkers[plantId];
         if (marker) {
-            map.setView(marker.getLatLng(), 20, { animate: true, duration: 1 }); // Zoom nível 20
+            map.flyTo(marker.getLatLng(), 20, { animate: true, duration: 1.5 }); // Zoom nível 20
             marker.openPopup();
         }
     }
 
-    // Função para resetar o mapa ao estado padrão
+    // Função para resetar o mapa ao estado padrão usando flyTo
     function resetMap() {
-        map.setView([-22.9680, -43.2240], 15, { animate: true, duration: 1 });
+        map.flyTo([-22.9680, -43.2230], 17, { animate: true, duration: 1.5 }); // Zoom nível 17
         // Fecha todos os popups
         map.closePopup();
     }
