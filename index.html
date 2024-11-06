@@ -75,7 +75,6 @@
             </p>
         </div>
 
-        <!-- Adicionando as demais plantas -->
         <div class="plant-section" id="plant-3">
             <h2>Fruta-pão (Artocarpus altilis)</h2>
             <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Artocarpus_altilis.jpg" alt="Fruta-pão">
@@ -144,8 +143,8 @@
 
 <!-- Inclua os scripts do Leaflet -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<!-- Inclua o plugin Leaflet GPX -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
+<!-- Inclua o Leaflet Omnivore -->
+<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.4/leaflet-omnivore.min.js"></script>
 
 <script>
     // Inicializa o mapa
@@ -160,23 +159,13 @@
         maxZoom: 19
     }).addTo(map);
 
-    // Carrega o arquivo GPX da trilha
-    new L.GPX('trilha_frei_leandro.gpx', {
-        async: true,
-        marker_options: {
-            startIconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/pin-icon-start.png',
-            endIconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/pin-icon-end.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/pin-shadow.png'
-        },
-        polyline_options: {
-            color: 'blue',
-            opacity: 0.75,
-            weight: 5,
-            lineCap: 'round'
-        }
-    }).on('loaded', function(e) {
-        // Não ajustamos mais o fitBounds aqui para manter o zoom no arboreto
-    }).addTo(map);
+    // Carrega o arquivo GPX da trilha usando o Leaflet Omnivore
+    omnivore.gpx('trilha_frei_leandro.gpx')
+        .on('ready', function() {
+            // Opcional: ajustar o mapa aos limites da trilha
+            // map.fitBounds(this.getBounds());
+        })
+        .addTo(map);
 
     // Dados GeoJSON das plantas (todas as 10 plantas)
     var plantasGeoJSON = {
