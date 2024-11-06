@@ -48,7 +48,7 @@
         }
     </style>
     <!-- Inclua o CSS do Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
 
@@ -75,6 +75,7 @@
             </p>
         </div>
 
+        <!-- Adicionando as demais plantas -->
         <div class="plant-section" id="plant-3">
             <h2>Fruta-pão (Artocarpus altilis)</h2>
             <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Artocarpus_altilis.jpg" alt="Fruta-pão">
@@ -142,63 +143,31 @@
 </div>
 
 <!-- Inclua os scripts do Leaflet -->
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<!-- Inclua o plugin Proj4Leaflet para suportar CRS personalizados -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <!-- Inclua o plugin Leaflet GPX -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
 
 <script>
-    // Define o CRS EPSG:4326
-    var crs = new L.Proj.CRS('EPSG:4326',
-        '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', {
-            resolutions: [
-                0.703125000000000,
-                0.351562500000000,
-                0.175781250000000,
-                0.087890625000000,
-                0.043945312500000,
-                0.021972656250000,
-                0.010986328125000,
-                0.005493164062500,
-                0.002746582031250,
-                0.001373291015625,
-                0.000686645507813,
-                0.000343322753906,
-                0.000171661376953,
-                0.000085830688477,
-                0.000042915344238,
-                0.000021457672119,
-                0.000010728836060,
-                0.000005364418030,
-                0.000002682209015,
-                0.000001341104507
-            ]
-        });
-
-    // Inicializa o mapa com o CRS EPSG:4326
+    // Inicializa o mapa com o CRS padrão (EPSG:3857)
     var map = L.map('map', {
-        crs: crs,
         zoomControl: false,
         maxZoom: 19
-    }).setView([-22.9680, -43.2230], 16);
+    }).setView([-22.9680, -43.2230], 17);
 
-    // Adiciona uma camada de tiles que suporta EPSG:4326
-    L.tileLayer('https://map1.vis.earthdata.nasa.gov/wmts-webmerc/{layer}/{tileMatrixSet}/{z}/{y}/{x}.png', {
-        layer: 'BlueMarble_ShadedRelief_Bathymetry',
-        tileMatrixSet: 'EPSG4326_250m',
-        format: 'image/png',
-        tileSize: 256,
-        minZoom: 1,
-        maxZoom: 9,
-        attribution: '&copy; NASA Blue Marble',
-        noWrap: true,
-        continuousWorld: true
+    // Adiciona a camada de tiles do OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
     }).addTo(map);
 
     // Carrega o arquivo GPX da trilha usando o Leaflet GPX
     var gpxLayer = new L.GPX('trilha_frei_leandro.gpx', {
         async: true,
+        marker_options: {
+            startIconUrl: null,
+            endIconUrl: null,
+            shadowUrl: null
+        },
         polyline_options: {
             color: 'blue',
             opacity: 0.75,
@@ -287,14 +256,14 @@
     function focusOnPlant(plantId) {
         var marker = plantMarkers[plantId];
         if (marker) {
-            map.flyTo(marker.getLatLng(), 18, { animate: true, duration: 1.5 }); // Ajuste o nível de zoom conforme necessário
+            map.flyTo(marker.getLatLng(), 19, { animate: true, duration: 1.5 });
             marker.openPopup();
         }
     }
 
     // Função para resetar o mapa ao estado padrão usando flyTo
     function resetMap() {
-        map.flyTo([-22.9680, -43.2230], 16, { animate: true, duration: 1.5 }); // Ajuste o nível de zoom conforme necessário
+        map.flyTo([-22.9680, -43.2230], 17, { animate: true, duration: 1.5 });
         // Fecha todos os popups
         map.closePopup();
     }
