@@ -212,16 +212,17 @@
     var plantMarkers = {};
     var currentPlantId = null; // Para rastrear qual planta está em foco
 
+    // Define o ícone personalizado para as plantas (usando o link do pin fornecido)
+    var plantIcon = L.icon({
+        iconUrl: 'https://cloud.jbrj.gov.br/apps/files_sharing/publicpreview/PwkmGYHBiPLXqkQ?file=/&fileId=17944130&x=1927&y=920&a=true&etag=8baaf56e22ff20721c74c68b82a9eb73',
+        iconSize: [32, 37],
+        iconAnchor: [16, 37],
+        popupAnchor: [0, -28]
+    });
+
     // Adiciona os pontos das plantas ao mapa
     L.geoJSON(plantasGeoJSON, {
         pointToLayer: function(feature, latlng) {
-            // Define o ícone personalizado para as plantas
-            var plantIcon = L.icon({
-                iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/Tree_icon.png', // Substitua pelo URL do ícone desejado
-                iconSize: [32, 37],
-                iconAnchor: [16, 37],
-                popupAnchor: [0, -28]
-            });
             var marker = L.marker(latlng, { icon: plantIcon });
 
             // Armazena o marcador em uma variável global para referência posterior
