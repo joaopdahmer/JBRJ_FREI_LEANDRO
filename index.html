@@ -32,7 +32,7 @@
             padding: 20px;
             box-sizing: border-box;
         }
-        /* Estilos para cada framebox de narrativa */
+        /* Estilos para cada seção de narrativa */
         .plant-section {
             margin-bottom: 40px;
             border-bottom: 1px solid #ccc;
@@ -48,7 +48,7 @@
         }
     </style>
     <!-- Inclua o CSS do Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 </head>
 <body>
 
@@ -75,7 +75,6 @@
             </p>
         </div>
 
-        <!-- Adicione as demais narrativas das plantas (3 a 10) aqui -->
         <div class="plant-section" id="plant-3">
             <h2>Fruta-pão (Artocarpus altilis)</h2>
             <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Artocarpus_altilis.jpg" alt="Fruta-pão">
@@ -139,49 +138,82 @@
                 A jaqueira foi introduzida no Brasil por meio dos esforços de Frei Leandro, que reconheceu o valor nutricional e a versatilidade da fruta. No Jardim Botânico, ele cultivou jaqueiras e estudou sua adaptação ao clima brasileiro. A jaca tornou-se uma importante fonte alimentar, utilizada em diversas preparações culinárias. O trabalho de Frei Leandro foi fundamental para a disseminação da jaqueira no país.
             </p>
         </div>
-
     </div>
 </div>
 
 <!-- Inclua os scripts do Leaflet -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<!-- Inclua o Leaflet Omnivore via unpkg -->
-<script src="https://unpkg.com/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- Inclua o plugin Proj4Leaflet para suportar CRS personalizados -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.js"></script>
+<!-- Inclua o plugin Leaflet GPX -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.0/gpx.min.js"></script>
 
 <script>
-    // Inicializa o mapa
-    var map = L.map('map', {
-        zoomControl: false, // Remove os controles de zoom padrão
-        maxZoom: 19 // Define o nível máximo de zoom
-    }).setView([-22.9680, -43.2230], 17); // Zoom no arboreto
+    // Define o CRS EPSG:4326
+    var crs = new L.Proj.CRS('EPSG:4326',
+        '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs', {
+            resolutions: [
+                0.703125000000000,
+                0.351562500000000,
+                0.175781250000000,
+                0.087890625000000,
+                0.043945312500000,
+                0.021972656250000,
+                0.010986328125000,
+                0.005493164062500,
+                0.002746582031250,
+                0.001373291015625,
+                0.000686645507813,
+                0.000343322753906,
+                0.000171661376953,
+                0.000085830688477,
+                0.000042915344238,
+                0.000021457672119,
+                0.000010728836060,
+                0.000005364418030,
+                0.000002682209015,
+                0.000001341104507
+            ]
+        });
 
-    // Adiciona a camada de tiles do OpenStreetMap com maxZoom definido
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
+    // Inicializa o mapa com o CRS EPSG:4326
+    var map = L.map('map', {
+        crs: crs,
+        zoomControl: false,
         maxZoom: 19
+    }).setView([-22.9680, -43.2230], 16);
+
+    // Adiciona uma camada de tiles que suporta EPSG:4326
+    L.tileLayer('https://map1.vis.earthdata.nasa.gov/wmts-webmerc/{layer}/{tileMatrixSet}/{z}/{y}/{x}.png', {
+        layer: 'BlueMarble_ShadedRelief_Bathymetry',
+        tileMatrixSet: 'EPSG4326_250m',
+        format: 'image/png',
+        tileSize: 256,
+        minZoom: 1,
+        maxZoom: 9,
+        attribution: '&copy; NASA Blue Marble',
+        noWrap: true,
+        continuousWorld: true
     }).addTo(map);
 
-    // Carrega o arquivo GPX da trilha usando o Leaflet Omnivore
-    var gpxLayer = omnivore.gpx('trilha_frei_leandro.gpx')
-        .on('ready', function() {
-            // Opcional: ajustar o mapa aos limites da trilha
-            // map.fitBounds(this.getBounds());
-        })
-        .addTo(map);
-
-    // Adiciona estilo à trilha GPX
-    gpxLayer.setStyle({
-        color: 'blue',
-        weight: 5,
-        opacity: 0.75,
-        lineCap: 'round'
-    });
+    // Carrega o arquivo GPX da trilha usando o Leaflet GPX
+    var gpxLayer = new L.GPX('trilha_frei_leandro.gpx', {
+        async: true,
+        polyline_options: {
+            color: 'blue',
+            opacity: 0.75,
+            weight: 5,
+            lineCap: 'round'
+        }
+    }).on('loaded', function(e) {
+        // Opcional: ajustar o mapa aos limites da trilha
+        // map.fitBounds(e.target.getBounds());
+    }).addTo(map);
 
     // Dados GeoJSON das plantas (todas as 10 plantas)
     var plantasGeoJSON = {
         "type": "FeatureCollection",
         "name": "plantas_frei_leandro",
-        "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
         "features": [
             { "type": "Feature", "properties": { "id": 1 }, "geometry": { "type": "Point", "coordinates": [ -43.222145588873275, -22.969239816399224 ] } },
             { "type": "Feature", "properties": { "id": 2 }, "geometry": { "type": "Point", "coordinates": [ -43.22322470227887, -22.970023005533903 ] } },
@@ -205,7 +237,7 @@
         pointToLayer: function(feature, latlng) {
             // Define o ícone personalizado para as plantas
             var plantIcon = L.icon({
-                iconUrl: 'https://example.com/icon.png', // Substitua pelo URL do ícone desejado
+                iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/Tree_icon.png', // Substitua pelo URL do ícone desejado
                 iconSize: [32, 37],
                 iconAnchor: [16, 37],
                 popupAnchor: [0, -28]
@@ -255,14 +287,14 @@
     function focusOnPlant(plantId) {
         var marker = plantMarkers[plantId];
         if (marker) {
-            map.flyTo(marker.getLatLng(), 19, { animate: true, duration: 1.5 }); // Zoom nível 19 (máximo)
+            map.flyTo(marker.getLatLng(), 18, { animate: true, duration: 1.5 }); // Ajuste o nível de zoom conforme necessário
             marker.openPopup();
         }
     }
 
     // Função para resetar o mapa ao estado padrão usando flyTo
     function resetMap() {
-        map.flyTo([-22.9680, -43.2230], 17, { animate: true, duration: 1.5 }); // Zoom nível 17
+        map.flyTo([-22.9680, -43.2230], 16, { animate: true, duration: 1.5 }); // Ajuste o nível de zoom conforme necessário
         // Fecha todos os popups
         map.closePopup();
     }
